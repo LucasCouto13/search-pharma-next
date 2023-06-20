@@ -3,6 +3,7 @@ import TextosH1 from '@/components/TextosH1'
 import Card from '@/components/Card'
 import api from '@/services/api'
 import { useEffect, useState } from 'react'
+import input from 'postcss/lib/input'
 
 export default function Medicamentos() {
   const BASE_URL = '/medicamento'
@@ -53,6 +54,19 @@ export default function Medicamentos() {
     }
   }
 
+  const filtrar = (event: any) => {
+    event.preventDefault()
+    if (input !== '')
+      api
+        .get(BASE_URL + `/${input}`)
+        .then((res) => {
+          return setProduto(res.data)
+        })
+        .catch((err) => {
+          console.error('deu ruim!' + err)
+        })
+    else setarPadrao()
+  }
   return (
     <>
       <main className="flex">

@@ -3,13 +3,17 @@ import TextosH1 from '@/components/TextosH1'
 import api from '@/services/api'
 import { useEffect, useState } from 'react'
 import Tabela from '@/components/Tabela'
-// import Dropdown from '@/components/Dropdown'
-import { Dropdown, div } from 'flowbite-react'
+import { Dropdown, Button, Modal } from 'flowbite-react'
+import NovoProduto from '@/components/NovoProduto'
+import { ModalFooter } from 'flowbite-react/lib/esm/components/Modal/ModalFooter'
 
 export default function Estoque() {
   const BASE_URL = '/produtos'
   const [produto, setProduto] = useState()
   const [input, setInput] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [openModal, setOpenModal] = useState<string | undefined>()
+  const props = { openModal, setOpenModal }
 
   useEffect(() => {
     setarPadrao()
@@ -52,6 +56,10 @@ export default function Estoque() {
           console.error('deu ruim!' + err)
         })
     } else setarPadrao()
+  }
+
+  const handleOpenModal = () => {
+    setIsModalOpen((prev) => !prev)
   }
 
   return (
@@ -142,17 +150,37 @@ export default function Estoque() {
             </div>
             <div className="flex flex-col">Exportar</div>
             <div className="flex flex-col">
-              <a
-                href="#"
-                className="rounded-lg bg-purple-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
-              >
-                + Produtos
-              </a>
+              <button onClick={() => props.setOpenModal('default')}>
+                <a
+                  href="#"
+                  className="rounded-lg bg-purple-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+                >
+                  + Produtos
+                </a>
+              </button>
             </div>
           </div>
           <Tabela produto={produto} />
+          {isModalOpen && <NovoProduto />}
         </div>
       </main>
+
+      <Modal
+        size={'7xl'}
+        show={props.openModal === 'default'}
+        onClose={() => props.setOpenModal(undefined)}
+      >
+        <Modal.Header>
+          <TextosH1
+            name="Novo Produto"
+            style="pt-2 pb-2 text-2xl font-bold text-purple-700"
+          ></TextosH1>
+        </Modal.Header>
+        <Modal.Body>
+          <NovoProduto />
+        </Modal.Body>
+        <ModalFooter></ModalFooter>
+      </Modal>
     </>
   )
 }
