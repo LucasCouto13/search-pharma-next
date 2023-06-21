@@ -25,6 +25,9 @@ module.exports = {
           100: '#DFDFDF',
         },
       },
+      margin: {
+        '305px': '305px',
+      },
     },
   },
   plugins: [require('flowbite/plugin')],

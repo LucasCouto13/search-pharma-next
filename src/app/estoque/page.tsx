@@ -161,7 +161,6 @@ export default function Estoque() {
             </div>
           </div>
           <Tabela produto={produto} />
-          {isModalOpen && <NovoProduto />}
         </div>
       </main>
 

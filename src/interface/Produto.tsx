@@ -5,4 +5,6 @@ interface Produto {
   categoria: string
   preco: number
   quantidadeEstoque: number
+  imagem: string
+  catalogo: boolean
 }

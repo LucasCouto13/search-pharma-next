@@ -1,9 +1,19 @@
 export default function Tabela({ produto }: any) {
   const verificaCatalogo = (dataProduto: any): any => {
     if (dataProduto.catalogo) {
-      return "peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white"
+      return (
+        <>
+          <div className="text-purple-700">
+            <b>ON</b>
+          </div>
+        </>
+      )
     } else {
-      return "peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600"
+      return (
+        <>
+          <div className="text-gray-700">OFF</div>
+        </>
+      )
     }
   }
   return (
@@ -58,7 +68,7 @@ export default function Tabela({ produto }: any) {
                             value=""
                             className="peer sr-only"
                           ></input>
-                          <div className={verificaCatalogo(dataProduto)}></div>
+                          <div>{verificaCatalogo(dataProduto)}</div>
                         </label>
                       </>
                     </b>

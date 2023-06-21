@@ -34,7 +34,6 @@ export default function MedicamentosLayout({
           medicamento="hidden"
           cosmeticos="hidden"
           outros="hidden"
-          pesquisa="px-0"
         />
         {children}
         <footer className="relative bottom-0 mt-20 w-full bg-gray-300 shadow dark:bg-gray-800">

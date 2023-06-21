@@ -1,7 +1,7 @@
 'use client'
-import TextosH1 from '@/components/TextosH1'
+
 import api from '@/services/api'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 interface ProdutoValues {
   label: string
@@ -31,6 +31,13 @@ export default function Estoque() {
   const [categoria, setCategoria] = useState('')
   const [quantidadeEstoque, setQuantidadeEstoque] = useState(0)
   const [preco, setPreco] = useState(0)
+  const [imagem, setImagem] = useState('')
+  const [catalogo, setCatalogo] = useState(false)
+
+  const verificaCheckbox = (event: any): any => {
+    console.log(event.target.checked)
+    return event.target.checked ? setCatalogo(true) : setCatalogo(false)
+  }
 
   const barraErro = (error: any): any => {
     ;<>
@@ -137,8 +144,9 @@ export default function Estoque() {
       categoria,
       quantidadeEstoque,
       preco,
+      imagem,
+      catalogo,
     }
-    console.log(produto)
     cadastrarProduto(produto)
   }
 
@@ -193,6 +201,29 @@ export default function Estoque() {
                 </div>
                 <div className="group relative z-0 mb-6 w-full">
                   <Input label={'Preço'} value={preco} updateValue={setPreco} />
+                </div>
+                <div className="group relative z-0 mb-6 w-full">
+                  <Input
+                    label={'Imagem - URL'}
+                    value={imagem}
+                    updateValue={setImagem}
+                  />
+                </div>
+              </div>
+              <div className="grid md:grid-cols-1 md:gap-6">
+                <div className="group relative z-0 mb-6 w-full">
+                  <label className="relative inline-flex cursor-pointer items-center">
+                    <input
+                      type="checkbox"
+                      value=""
+                      className="peer sr-only"
+                      onClick={(event) => verificaCheckbox(event)}
+                    ></input>
+                    <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-purple-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-purple-800"></div>
+                    <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Catálogo
+                    </span>
+                  </label>
                 </div>
               </div>
             </form>
