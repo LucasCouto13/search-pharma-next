@@ -5,7 +5,7 @@ export default function Card({ dataCard }: any) {
     return preco.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
   }
   return (
-    <div className="m-3 w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800">
+    <div className="col-2 m-3 flex w-full max-w-sm flex-col rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800">
       <a href="#" className="items-center justify-center">
         <img
           className="ml-7 h-60 w-64 items-center justify-center rounded-t-lg p-7"

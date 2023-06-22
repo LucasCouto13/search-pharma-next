@@ -24,6 +24,9 @@ module.exports = {
         gray: {
           100: '#DFDFDF',
         },
+        green: {
+          900: '#C8E6C9',
+        },
       },
       margin: {
         '305px': '305px',

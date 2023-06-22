@@ -11,7 +11,8 @@ export default function Estoque() {
   const BASE_URL = '/produtos'
   const [produto, setProduto] = useState()
   const [input, setInput] = useState('')
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [produtoPropsData, setProdutoPropsData] = useState('')
+  const [edicao, setEdicao] = useState(false)
   const [openModal, setOpenModal] = useState<string | undefined>()
   const props = { openModal, setOpenModal }
 
@@ -32,16 +33,17 @@ export default function Estoque() {
 
   const filtrar = (event: any) => {
     event.preventDefault()
-    if (input !== '')
+    if (input !== '') {
+      console.log('passa aqui')
       api
-        .get(BASE_URL + `/${input}`)
+        .get(BASE_URL + `/filtra-Todos/${input}`)
         .then((res) => {
           return setProduto(res.data)
         })
         .catch((err) => {
           console.error('deu ruim!' + err)
         })
-    else setarPadrao()
+    } else setarPadrao()
   }
 
   const filtrarPorTipo = (value: string) => {
@@ -58,8 +60,14 @@ export default function Estoque() {
     } else setarPadrao()
   }
 
-  const handleOpenModal = () => {
-    setIsModalOpen((prev) => !prev)
+  const produtoProps = (data: any) => {
+    setProdutoPropsData(data)
+    console.log(data)
+  }
+
+  const produtoEdicao = (edicao: any) => {
+    edicao ? setEdicao(true) : setEdicao(false)
+    console.log(edicao)
   }
 
   return (
@@ -99,7 +107,9 @@ export default function Estoque() {
                     id="search"
                     className="block h-9 w-96 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-purple-500 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-purple-500 dark:focus:ring-purple-500"
                     placeholder="Search"
-                    onChange={(event) => setInput(event.target.value)}
+                    onChange={(event) => {
+                      setInput(event.target.value)
+                    }}
                     required
                   ></input>
                   <button
@@ -148,9 +158,13 @@ export default function Estoque() {
                 </div>
               </>
             </div>
-            <div className="flex flex-col">Exportar</div>
             <div className="flex flex-col">
-              <button onClick={() => props.setOpenModal('default')}>
+              <button
+                onClick={() => {
+                  props.setOpenModal('default')
+                  produtoEdicao(false)
+                }}
+              >
                 <a
                   href="#"
                   className="rounded-lg bg-purple-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
@@ -160,26 +174,33 @@ export default function Estoque() {
               </button>
             </div>
           </div>
-          <Tabela produto={produto} />
+          <Tabela
+            produto={produto}
+            props={props}
+            produtoProps={produtoProps}
+            edicao={produtoEdicao}
+          />
         </div>
       </main>
 
-      <Modal
-        size={'7xl'}
-        show={props.openModal === 'default'}
-        onClose={() => props.setOpenModal(undefined)}
-      >
-        <Modal.Header>
-          <TextosH1
-            name="Novo Produto"
-            style="pt-2 pb-2 text-2xl font-bold text-purple-700"
-          ></TextosH1>
-        </Modal.Header>
-        <Modal.Body>
-          <NovoProduto />
-        </Modal.Body>
-        <ModalFooter></ModalFooter>
-      </Modal>
+      {props.openModal === 'default' && (
+        <Modal
+          size={'7xl'}
+          show={props.openModal === 'default'}
+          onClose={() => props.setOpenModal(undefined)}
+        >
+          <Modal.Header>
+            <TextosH1
+              name="Novo Produto"
+              style="pt-2 pb-2 text-2xl font-bold text-purple-700"
+            ></TextosH1>
+          </Modal.Header>
+          <Modal.Body>
+            <NovoProduto edicao={edicao} dataProduto={produtoPropsData} />
+          </Modal.Body>
+          <ModalFooter></ModalFooter>
+        </Modal>
+      )}
     </>
   )
 }

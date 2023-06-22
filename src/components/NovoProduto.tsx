@@ -1,7 +1,9 @@
 'use client'
 
 import api from '@/services/api'
-import { useState } from 'react'
+import { useEffect, useState, react } from 'react'
+import BarraSucesso from './BarraSucesso'
+import { Toast } from 'flowbite-react'
 
 interface ProdutoValues {
   label: string
@@ -24,121 +26,61 @@ const Input = ({ label, value, updateValue }: ProdutoValues) => {
   )
 }
 
-export default function Estoque() {
+export default function Estoque({ edicao, dataProduto }: any) {
   const BASE_URL = '/produtos'
+  const [id, setId] = useState()
   const [nome, setNome] = useState('')
   const [tipo, setTipo] = useState('')
   const [categoria, setCategoria] = useState('')
   const [quantidadeEstoque, setQuantidadeEstoque] = useState(0)
   const [preco, setPreco] = useState(0)
   const [imagem, setImagem] = useState('')
-  const [catalogo, setCatalogo] = useState(false)
+  const [catalogo, setCatalogo] = useState(false || true)
+  const [notificacaoSucesso, setNotificacaoSucesso] = useState(false)
+
+  const [texto, setTexto] = useState('')
+
+  const verificaTexto = () => {
+    if (edicao) setTexto('Produto Editado com Sucesso!')
+    return setTexto('Produto Cadastrado com Sucesso!')
+  }
+
+  const buscarPorId = (dataProdutoId: any) => {
+    console.log('entrou na busca id')
+    api
+      .get(BASE_URL + `/${dataProdutoId}`)
+      .then((res) => {
+        setId(res.data.id)
+        setNome(res.data.nome)
+        setTipo(res.data.tipo)
+        setCategoria(res.data.categoria)
+        setQuantidadeEstoque(res.data.quantidadeEstoque)
+        setPreco(res.data.preco)
+        setImagem(res.data.imagem)
+        setCatalogo(res.data.catalogo)
+        console.log('cat' + catalogo)
+      })
+      .catch((err) => {
+        console.log('deu ruim id' + err)
+      })
+  }
+
+  useEffect(() => {
+    if (edicao) buscarPorId(dataProduto)
+  }, [])
 
   const verificaCheckbox = (event: any): any => {
-    console.log(event.target.checked)
     return event.target.checked ? setCatalogo(true) : setCatalogo(false)
   }
 
-  const barraErro = (error: any): any => {
-    ;<>
-      <div
-        id="toast-warning"
-        className="flex w-full max-w-xs items-center rounded-lg bg-white p-4 text-gray-500 shadow dark:bg-gray-800 dark:text-gray-400"
-        role="alert"
-      >
-        <div className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
-          <svg
-            aria-hidden="true"
-            className="h-5 w-5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-              clipRule="evenodd"
-            ></path>
-          </svg>
-          <span className="sr-only">Warning icon</span>
-        </div>
-        <div className="ml-3 text-sm font-normal">{{ error }}</div>
-        <button
-          type="button"
-          className="-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 rounded-lg bg-white p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-gray-300 dark:bg-gray-800 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white"
-          data-dismiss-target="#toast-warning"
-          aria-label="Close"
-        >
-          <span className="sr-only">Close</span>
-          <svg
-            aria-hidden="true"
-            className="h-5 w-5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            ></path>
-          </svg>
-        </button>
-      </div>
-    </>
-  }
-
   const barraSucesso = () => {
-    ;<>
-      <div
-        id="toast-success"
-        className="mb-4 flex w-full max-w-xs items-center rounded-lg bg-white p-4 text-gray-500 shadow dark:bg-gray-800 dark:text-gray-400"
-        role="alert"
-      >
-        <div className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-          <svg
-            aria-hidden="true"
-            className="h-5 w-5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-              clipRule="evenodd"
-            ></path>
-          </svg>
-          <span className="sr-only">Check icon</span>
-        </div>
-        <div className="ml-3 text-sm font-normal">Item moved successfully.</div>
-        <button
-          type="button"
-          className="-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 rounded-lg bg-white p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-gray-300 dark:bg-gray-800 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white"
-          data-dismiss-target="#toast-success"
-          aria-label="Close"
-        >
-          <span className="sr-only">Close</span>
-          <svg
-            aria-hidden="true"
-            className="h-5 w-5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            ></path>
-          </svg>
-        </button>
-      </div>
-    </>
+    setNotificacaoSucesso(true)
   }
 
   const enviar = () => {
+    verificaTexto()
     const produto: Produto = {
+      id,
       nome,
       tipo,
       categoria,
@@ -147,9 +89,22 @@ export default function Estoque() {
       imagem,
       catalogo,
     }
-    cadastrarProduto(produto)
+    if (edicao) {
+      atualizarProduto(produto)
+    } else {
+      cadastrarProduto(produto)
+    }
   }
-
+  const atualizarProduto = (body: any) => {
+    api
+      .put(BASE_URL, body)
+      .then((res) => {
+        barraSucesso()
+      })
+      .catch((err) => {
+        console.log('não atualizou' + err)
+      })
+  }
   const cadastrarProduto = (body: any) => {
     api
       .post(BASE_URL, body)
@@ -158,8 +113,7 @@ export default function Estoque() {
         console.log('deu bom')
       })
       .catch((err) => {
-        barraErro(err)
-        console.log('deu ruim')
+        console.log('não cadastrou' + err)
       })
   }
   return (
@@ -239,6 +193,30 @@ export default function Estoque() {
           </div>
         </div>
       </main>
+      {notificacaoSucesso === true && (
+        <div className="flex flex-col items-center justify-center gap-4">
+          <Toast duration={75}>
+            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-900 text-green-500 dark:bg-green-800 dark:text-green-200">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 48 48"
+                width="20px"
+                height="20px"
+              >
+                <path
+                  fill="#c8e6c9"
+                  d="M36,42H12c-3.314,0-6-2.686-6-6V12c0-3.314,2.686-6,6-6h24c3.314,0,6,2.686,6,6v24C42,39.314,39.314,42,36,42z"
+                />
+                <path
+                  fill="#4caf50"
+                  d="M34.585 14.586L21.014 28.172 15.413 22.584 12.587 25.416 21.019 33.828 37.415 17.414z"
+                />
+              </svg>
+            </div>
+            <div className="ml-3 text-sm font-normal">{texto}</div>
+          </Toast>
+        </div>
+      )}
     </>
   )
 }
